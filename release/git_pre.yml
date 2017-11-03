@@ -1,45 +1,19 @@
 ---
 
-- block:
+- name: "{{ repo }}"
+  shell: git branch | grep "*"
+  register: active_branch
+  args:
+    chdir: "{{ ansible_env.HOME }}/git/{{ repo }}"
 
-  - name: "{{ repo }}"
-    shell: git branch | grep "*"
-    register: active_branch
-    args:
-      chdir: "{{ ansible_env.HOME }}/git/{{ repo }}"
-
-  - name: "{{ repo }}"
-    command: "{{ item }}"
-    args:
-      chdir: "{{ ansible_env.HOME }}/git/{{ repo }}"
-    with_items:
-      - git checkout master
-      - git merge develop
-      - git push origin master
-      - git tag --force -a {{ version }} -m {{ version }}
-      - git push origin master --tags --force
-    when: "'develop' in active_branch.stdout"
-
-  when: repo != '.depy'
-
-- block:
-
-  - name: "{{ repo }}"
-    shell: git branch | grep "*"
-    register: active_branch
-    args:
-      chdir: "{{ ansible_env.HOME }}/{{ repo }}"
-
-  - name: "{{ repo }}"
-    command: "{{ item }}"
-    args:
-      chdir: "{{ ansible_env.HOME }}/{{ repo }}"
-    with_items:
-      - git checkout master
-      - git merge develop
-      - git push origin master
-      - git tag --force -a {{ version }} -m {{ version }}
-      - git push origin master --tags --force
-    when: "'develop' in active_branch.stdout"
-
-  when: repo == '.depy'
+- name: "{{ repo }}"
+  command: "{{ item }}"
+  args:
+    chdir: "{{ ansible_env.HOME }}/git/{{ repo }}"
+  with_items:
+    - git checkout master
+    - git merge develop
+    - git push origin master
+    - git tag --force -a {{ version }} -m {{ version }}
+    - git push origin master --tags --force
+  when: "'develop' in active_branch.stdout"
