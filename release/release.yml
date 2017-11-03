@@ -110,4 +110,4 @@
   - name: deploy
     command: eb deploy JustOnTime-prod
     args:
-      chdir: "{{ ansible_env.HOME }}/git/JustOnTime/justontime"
+      chdir: "{{ ansible_env.HOME }}/git/JustOnTime/web"
