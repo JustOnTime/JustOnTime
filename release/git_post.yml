@@ -1,0 +1,55 @@
+---
+
+- name: "Check {{ ansible_env.HOME }}/git/{{ repo }} exists"
+  stat:
+    path: "{{ ansible_env.HOME }}/git/{{ repo }}"
+  register: repo_home
+
+- name: "{{ repo }}"
+  shell: git branch | grep "*"
+  register: active_branch
+  args:
+    chdir: "{{ ansible_env.HOME }}/git/{{ repo }}"
+  when:
+    - repo_home.stat.exists
+    - repo_home.stat.isdir
+
+- name: "{{ repo }}"
+  command: "{{ item }}"
+  args:
+    chdir: "{{ ansible_env.HOME }}/git/{{ repo }}"
+  with_items:
+    - git checkout develop
+    - git merge master
+    - git push origin develop
+  when:
+    - repo_home.stat.exists
+    - repo_home.stat.isdir
+    - "'master' in active_branch.stdout"
+
+- name: "Check {{ ansible_env.HOME }}/{{ repo }} exists"
+  stat:
+    path: "{{ ansible_env.HOME }}/{{ repo }}"
+  register: repo_home
+
+- name: "{{ repo }}"
+  shell: git branch | grep "*"
+  register: active_branch
+  args:
+    chdir: "{{ ansible_env.HOME }}/{{ repo }}"
+  when:
+    - repo_home.stat.exists
+    - repo_home.stat.isdir
+
+- name: "{{ repo }}"
+  command: "{{ item }}"
+  args:
+    chdir: "{{ ansible_env.HOME }}/{{ repo }}"
+  with_items:
+    - git checkout develop
+    - git merge master
+    - git push origin develop
+  when:
+    - repo_home.stat.exists
+    - repo_home.stat.isdir
+    - "'master' in active_branch.stdout"

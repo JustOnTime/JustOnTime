@@ -1,0 +1,113 @@
+---
+
+- hosts: localhost
+  connection: local
+  gather_facts: True
+
+  vars:
+
+    token: "{{ lookup('file', .github) }}"
+
+  tasks:
+
+  - name: List milestones for JustOnTime/JustOnTime repo
+    uri:
+      method: GET
+      url: "https://api.github.com/repos/JustOnTime/JustOnTime/milestones"
+      status_code: 200
+      return_content: yes
+    register: milestones
+
+  - set_fact: current_milestone_number={{ item }}
+    when: item != 2
+    with_items: "{{ milestones | json_query('json[*].number') }}"
+
+  - name: Get current milestone
+    uri:
+      method: GET
+      url: "https://api.github.com/repos/JustOnTime/JustOnTime/milestones/{{ current_milestone_number }}"
+      status_code: 200
+      return_content: yes
+    register: current_milestone
+    
+  - set_fact: version={{ current_milestone.json.title }}
+  - set_fact: due_on={{ current_milestone.json.due_on }}
+
+  - assert:
+      that: due_on < ansible_date_time.iso8601
+      msg: Current milestone is not over yet
+
+  - name: VERSION file
+    shell: "grep {{ version }} {{ lookup('env', 'HOME') }}/git/JustOnTime/VERSION"
+    register: version_file
+    ignore_errors: True
+
+  - block:
+
+    - name: Updating VERSION file
+      copy: content="{{ version }}" dest="{{ lookup('env', 'HOME') }}/git/JustOnTime/VERSION"
+
+    - name: Commit/Push changes
+      command: "{{ item }}"
+      with_items:
+        - git add .
+        - git commit -m {{ version }}
+        - git push
+      args:
+        chdir: "{{ lookup('env', 'HOME') }}/git/JustOnTime"
+
+    when: version_file.rc != 0
+
+  - include_tasks: git_pre.yml
+    with_items:
+      - JustOnTime
+    loop_control:
+      loop_var: repo
+
+  - name: Commit/Push changes
+    command: "{{ item }}"
+    with_items:
+      - git add .
+      - git commit -m {{ version }}
+      - git push
+    args:
+      chdir: "{{ lookup('env', 'HOME') }}/git/JustOnTime"
+    when: version_file.rc != 0
+
+  - include_tasks: git_post.yml
+    with_items:
+      - JustOnTime
+    loop_control:
+      loop_var: repo
+
+  - name: Closing Current Github milestone
+    uri:
+      method: PATCH
+      url: https://github.com/JustOnTime/JustOnTime/milestones/{{ current_milestone_number }}
+      headers:
+        Authorization: token {{ token }}
+      body: { "state": "closed" }
+      body_format: json
+      status_code: 200
+      return_content: yes
+    register: closing_milestone
+
+  - name: Creating Next Release Github milestone
+    uri:
+      method: POST
+      url: https://github.com/JustOnTime/JustOnTime/milestones
+      headers:
+        Authorization: token {{ token }}
+      body: "{ \"title\": \"{{ next_version }}\" , \"due_on\": \"{{ next_version_due_on }}\" }"
+      body_format: json
+      status_code: 201
+      return_content: yes
+    register: next_milestone
+    vars:
+      next_version: 0.0.{{ version.split('.')[2] | int + 1 }}
+      next_version_due_on: "{{ due_on | get_next_weekday(5) }}"
+
+  - name: deploy
+    command: eb deploy prod
+    args:
+      chdir: "{{ ansible_env.HOME }}/git/JustOnTime/justontime"
