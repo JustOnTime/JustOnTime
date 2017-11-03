@@ -1,7 +1,3 @@
-#*******************************************************************************
-# Licensed Materials - Property of L.M.B.-Consulting Ltd.
-# (c) Copyright L.M.B.-Consulting 2016. All Rights Reserved.
-#*******************************************************************************
 import datetime
 
 def get_next_weekday(startdate, weekday):
