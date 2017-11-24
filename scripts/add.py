@@ -1,6 +1,7 @@
 import csv
 import mailchimp3
 import json
+import os
 
 def main():
 
@@ -27,6 +28,8 @@ def main():
 
             except Exception as e:
                 pass
+
+    os.remove(data['csv_file'])
 
     return
 
