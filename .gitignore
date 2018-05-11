@@ -7,3 +7,4 @@
 .mailchimp.json
 *.pyc
 *.retry
+venv/*

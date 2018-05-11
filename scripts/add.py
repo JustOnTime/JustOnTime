@@ -8,12 +8,12 @@ def main():
     with open('.mailchimp.json') as json_data_file:
         data = json.load(json_data_file)
 
-    with open(data['csv_file'], 'rb') as csvfile:
+    with open(data['csv_file']) as csvfile:
         connections = csv.DictReader(csvfile)
         for connection in connections:
 
             list_id = data['list_id']
-            client = mailchimp3.MailChimp(data['user'],data['secret'])
+            client = mailchimp3.MailChimp(data['secret'],data['user'])
 
             try:
 
