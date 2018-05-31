@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+    <title>JustOnTime</title>
+
+    {% block stylesheets %}
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    {% endblock %}
+
+  </head>
+
+  <body>
+
+    <style>
+    body {
+        background: #283C4C
+    }
+    h1,p {
+        color: #FFFFFF;
+        text-align: center;
+    }</style>
+    <h1>JustOnTime</h1>
+    <p>Collection as a Service</p>
+
+  </body>
+
+</html>
