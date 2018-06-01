@@ -8,3 +8,4 @@
 *.pyc
 *.retry
 venv/*
+mailinglist.txt
