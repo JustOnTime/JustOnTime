@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 import MySQLdb
 
 application = Flask(__name__, static_folder='static')
@@ -12,12 +12,13 @@ def index():
                           db="justontime")
         x = conn.cursor()
         try:
-           x.execute("""INSERT INTO list VALUES (%s)""",(request.form['email']))
+           x.execute("INSERT INTO list (email) VALUES ('" + request.form['email'] + "')")
            conn.commit()
         except:
            conn.rollback()
 
         conn.close()
+        return redirect(url_for('index'))
 
     return render_template('index.html')
 

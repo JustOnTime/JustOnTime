@@ -2,25 +2,22 @@
 # vi: set ft=ruby :
 
 $script = <<-SCRIPT
-sudo apt-get update && sudo apt-get install -y mysql-server python3
-sudo systemctl restart mysql
-sudo /usr/bin/mysqladmin -u root password '12345'
-sudo mysql -u root -p12345 -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '12345' WITH GRANT OPTION;"
-sudo mysql -u root -p12345 -e "FLUSH PRIVILEGES;"
+
+debconf-set-selections <<< 'mysql-server mysql-server/root_password password 12345'
+debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password 12345'
+
+sudo apt-get update && sudo apt-get install -y mysql-server python3 libmysqlclient-dev
 sudo systemctl restart mysql
 sudo mysql -u root -p12345 -e "CREATE DATABASE justontime;"
 sudo mysql -u root -p12345 -e "CREATE TABLE justontime.list (email VARCHAR(320));"
-
-git clone https://github.com/JustOnTime/justontime.git && cd justontime
 
 sudo apt-get install -y python3-setuptools python3-pip
 sudo -H pip3 install --upgrade pip
 sudo pip install --upgrade virtualenv
 virtualenv -p python3 venv
 source venv/bin/activate
-pip install flask
-python3 application.py &
-
+pip install flask mysqlclient
+cd /vagrant &&  nohup python3 application.py > /dev/null 2>&1 &
 SCRIPT
 
 Vagrant.configure("2") do |config|
