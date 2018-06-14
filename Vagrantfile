@@ -16,12 +16,42 @@ sudo -H pip3 install --upgrade pip
 sudo pip install --upgrade virtualenv
 virtualenv -p python3 venv
 source venv/bin/activate
-pip install flask mysqlclient
-cd /vagrant &&  nohup python3 application.py > /dev/null 2>&1 &
+pip install -r requirements.txt
+nohup python3 application.py > /dev/null 2>&1 &
 SCRIPT
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/bionic64"
-  config.vm.network "forwarded_port", guest: 5000, host: 5000
+
+  config.vm.provision "file", source: "application.py", destination: "$HOME/application.py"
+  config.vm.provision "file", source: "requirements.txt", destination: "$HOME/requirements.txt"
+  config.vm.provision "file", source: "static", destination: "$HOME/static"
+  config.vm.provision "file", source: "templates", destination: "$HOME/templates"
   config.vm.provision "shell", inline: $script
+
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  config.vm.provider :virtualbox do |virtualbox,override|
+
+    override.vm.box = "ubuntu/bionic64"
+    config.vm.network "forwarded_port", guest: 80, host: 5000
+
+  end
+
+
+  config.vm.provider :aws do |aws,override|
+
+    override.vm.box = "dummy"
+
+    aws.keypair_name = "id_rsa"
+    aws.ami = "ami-46dee13f"
+    aws.instance_type = "t2.micro"
+    aws.elastic_ip = "34.247.95.242"
+    aws.region = "eu-west-1"
+    aws.subnet_id = "subnet-709f1838"
+    aws.security_groups = ["sg-018775fbd35fb87ed"]
+    aws.associate_public_ip = true
+
+    override.ssh.username = "ubuntu"
+    override.ssh.private_key_path = "~/.ssh/id_rsa"
+ end
 end

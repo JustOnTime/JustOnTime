@@ -28,4 +28,4 @@ def static_from_root():
     return send_from_directory(application.static_folder, request.path[1:])
 
 if __name__ == "__main__":
-    application.run(host='0.0.0.0')
+    application.run(host='0.0.0.0',port=80)
