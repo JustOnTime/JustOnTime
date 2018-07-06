@@ -3,3 +3,4 @@ mailinglist.txt
 .mailchimp.json
 .vagrant/*
 *.log
+mysql/*

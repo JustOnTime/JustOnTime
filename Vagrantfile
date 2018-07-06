@@ -3,22 +3,21 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.provision "file", source: "application.py", destination: "$HOME/application.py"
-  config.vm.provision "file", source: "requirements.txt", destination: "$HOME/requirements.txt"
-  config.vm.provision "file", source: "static", destination: "$HOME/static"
-  config.vm.provision "file", source: "templates", destination: "$HOME/templates"
-  config.vm.provision "file", source: "scripts", destination: "$HOME/scripts"
-  config.vm.provision "shell", path: "bootstrap.sh"
-
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.trigger.before :destroy do |trigger|
+    trigger.warn = "Dumping database"
+    trigger.run_remote = {path: "scripts/dumpdb.sh"}
+  end
 
   config.vm.define "dev" do |dev|
 
     dev.vm.provider :virtualbox do |virtualbox,override|
 
+      dev.vm.provision "dev_provisioner", type: "shell", path: "bootstrap.sh"
+
       dev.vm.box = "ubuntu/bionic64"
       dev.vm.network "forwarded_port", guest: 80, host: 5000
       dev.vm.synced_folder "~/.aws", "/root/.aws"
+      dev.vm.network "private_network", type: "dhcp"
 
     end
   end
@@ -26,6 +25,15 @@ Vagrant.configure("2") do |config|
   config.vm.define "prod" do |prod|
 
     prod.vm.provider :aws do |aws,override|
+
+      prod.vm.provision "file", source: "application.py", destination: "$HOME/application.py"
+      prod.vm.provision "file", source: "requirements.txt", destination: "$HOME/requirements.txt"
+      prod.vm.provision "file", source: "static", destination: "$HOME/static"
+      prod.vm.provision "file", source: "templates", destination: "$HOME/templates"
+      prod.vm.provision "file", source: "scripts", destination: "$HOME/scripts"
+      prod.vm.provision "prod_provisioner", type: "shell", path: "bootstrap.sh"
+
+      prod.vm.synced_folder ".", "/vagrant", disabled: true
 
       prod.vm.box = "dummy"
 

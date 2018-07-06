@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if [ -d "/home/vagrant" ]; then
-  home="/home/vagrant"
+if [ -d "/vagrant" ]; then
+  home="/vagrant"
 else
   home="/home/ubuntu"
 fi
@@ -19,12 +19,14 @@ pip3 install --upgrade pip
 pip install --upgrade virtualenv
 virtualenv -p python3 venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip install -r $home/requirements.txt
 
+echo "bootstrap - Loading db - start"
 chmod +x $home/scripts/loaddb.sh
 $home/scripts/loaddb.sh
+echo "bootstrap - Loading db - end"
 
-nohup python3 application.py > /dev/null 2>&1 &
+nohup python3 $home/application.py > /dev/null 2>&1 &
 
 chmod +x $home/scripts/dumpdb.sh
 crontab -l > mycron 2>/dev/null
