@@ -3,8 +3,12 @@ import MySQLdb
 
 application = Flask(__name__, static_folder='static')
 
-@application.route('/', methods=['GET','POST'])
-def index():
+@application.route('/')
+def home():
+    return render_template('home.html')
+
+@application.route('/contact_us', methods=['GET','POST'])
+def contact_us():
     if request.method == 'POST':
         conn = MySQLdb.connect(host= "localhost",
                           user="root",
@@ -18,9 +22,9 @@ def index():
            conn.rollback()
 
         conn.close()
-        return redirect(url_for('index'))
+        return redirect(url_for('contact_us'))
 
-    return render_template('index.html')
+    return render_template('contact_us.html')
 
 @application.route('/robots.txt')
 @application.route('/sitemap.xml')

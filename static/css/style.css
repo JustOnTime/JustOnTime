@@ -1,8 +1,73 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: "Titillium Web", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  color: white;
+  background-color: #283c4c;
 }
-
-a {
-  color: #00B7FF;
+header {
+  position: fixed;
+  top: 0;
+  height: 75px;
+  width: 100%;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+}
+header:hover {
+  background-color: #243541;
+}
+header h1.logo {
+  margin: 0;
+  font-size: 1.7em;
+  float: left;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 75px;
+}
+header h1.logo:hover {
+  text-decoration: none;
+}
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
+div.home {
+  position: absolute;
+  top: 75px;
+  padding: 10px 0 30px 0;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+div.contact_us {
+  position: absolute;
+  top: 75px;
+  padding: 10px 0 30px 0;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+.menu {
+  float: right;
+  margin-top: 8px;
+}
+.menu li {
+  display: inline;
+}
+.menu li + li {
+  margin-left: 35px;
+}
+.menu li a {
+  text-decoration: none;
+  color: white;
+  align-items: center;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 75px;
 }
