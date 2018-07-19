@@ -1,33 +1,21 @@
-<!DOCTYPE html>
+{% extends "bootstrap/base.html" %}
 
-<html>
+{% block title %}justontime{% endblock %}
 
-  <head>
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">{% endblock %}
 
-    <title>justontime</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
-
-  </head>
-
-  <body>
-
-    <header>
-      <div class="container">
-        <h1 class="logo">justontime</h1>
-        <strong><nav>
-          <ul class="menu">
-            <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li><a href="{{ url_for('contact_us') }}">Contact Us</a></li>
-          </ul>
-        </nav></strong>
-      </div>
-    </header>
-
-    <div class="container">
-      {% block content %}
-      {% endblock %}
+{% block navbar %}
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">justontime</a>
     </div>
+    <ul class="nav navbar-nav">
+      <li class="navbar-right"><a href="{{ url_for('index') }}">Home</a></li>
+      <li class="navbar-right"><a href="{{ url_for('contact') }}">Contact Us</a></li>
+    </ul>
+  </div>
+{% endblock %}
 
-  </body>
-
-</html>
+{% block content %}
+{% endblock %} -->
