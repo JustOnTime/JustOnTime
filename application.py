@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for
-from flask_bootstrap import Bootstrap
 import MySQLdb
 
 application = Flask(__name__, static_folder='static')
-Bootstrap(application)
 
 @application.route('/')
 def index():
