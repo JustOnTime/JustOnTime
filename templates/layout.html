@@ -1,31 +1,26 @@
-<!DOCTYPE html>
-
-<html>
-
+<!doctype html>
+<html lang="en">
   <head>
-
-    <title>justontime</title>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Improve Business ethics over the world">
+    <meta name="author" content="Liora Milbaum and justontime contributors">
+    <title>justontime · Payments due Just On Time.</title>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
-
   </head>
 
   <body>
 
-    <header>
-      <div class="container">
-        <h1 class="logo">justontime</h1>
-        <strong><nav>
-          <ul class="menu">
-            <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
-          </ul>
-        </nav></strong>
-      </div>
+    <header class="container-fluid" style="height: 50vh;background: url(static/images/accounting-blur-budget-128867.jpg);no-repeat center center;background-size: cover;margin-bottom: 20px;">
+      <nav class="nav justify-content-end">
+        <a class="nav-item nav-link" style="color: white" href="{{ url_for('index') }}">Home</a>
+        <a class="nav-item nav-link" style="color: white" href="{{ url_for('contact') }}">Contact Us</a>
+      </nav>
     </header>
 
-    <div class="container">
+    <div class="container fixed-bottom" style="height: 50vh;">
       {% block content %}
       {% endblock %}
     </div>
