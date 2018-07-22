@@ -53,21 +53,3 @@ div.contact_us {
      -moz-border-radius: 6px;
           border-radius: 6px;
 }
-.menu {
-  float: right;
-  margin-top: 8px;
-}
-.menu li {
-  display: inline;
-}
-.menu li + li {
-  margin-left: 35px;
-}
-.menu li a {
-  text-decoration: none;
-  color: white;
-  align-items: center;
-  text-align: center;
-  vertical-align: middle;
-  line-height: 75px;
-}
